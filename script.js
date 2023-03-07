@@ -133,6 +133,53 @@ function collision(b,p){
     return p.left < b.right && p.top < b.bottom && p.right > b.left && p.bottom > b.top
 }
 
+//Update function
+function update(){
+    
+    //Change the score of players
+    if( ball.x - ball.radius < 0 ){
+        com.score++;
+        comScore.play();
+        resetBall();
+    }else if( ball.x + ball.radius > cvs.width){
+        user.score++;
+        userScore.play();
+        resetBall();
+    }
+    
+    ball.x += ball.velocityX;
+    ball.y += ball.velocityY;
+    
+    //Computer plays
+    com.y += ((ball.y - (com.y + com.height/2)))*0.1;
+    
+    //Inverse y velocity if ball touches the top or the bottom
+    if(ball.y - ball.radius < 0 || ball.y + ball.radius > cvs.height){
+        ball.velocityY = -ball.velocityY;
+        wall.play();
+    }
+    
+    //Check if the ball a paddle
+    let player = (ball.x + ball.radius < cvs.width/2) ? user : com
+
+    if(collision(ball,player)){
+
+        hit.play()
+        
+        let collidePoint = (ball.y - (player.y + player.height/2))
+
+        collidePoint = collidePoint / (player.height/2)
+
+        let angleRad = (Math.PI/4) * collidePoint
+        
+        //Change ball direction
+        let direction = (ball.x + ball.radius < cvs.width/2) ? 1 : -1
+        ball.velocityX = direction * ball.speed * Math.cos(angleRad)
+        ball.velocityY = ball.speed * Math.sin(angleRad)
+        
+        ball.speed += 0.5
+    }
+}
 
 //Game init
 function game(){
