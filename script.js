@@ -1,3 +1,41 @@
+let handpose;
+let video;
+let hands = [];
+
+function setup() {
+    createCanvas(640, 480);
+    video = createCapture(VIDEO);
+    video.size(width, height);
+
+    handpose = ml5.handpose(video, modelReady);
+    handpose.on("hand", results => {
+        hands = results;
+    });
+    video.hide();
+    barre = document.querySelector(".barre");
+}
+
+function modelReady() {
+    console.log("Model ready!");
+}
+function draw() {
+    image(video, 0, 0, width, height);
+    drawKeypoints();
+
+}
+function drawKeypoints() {
+    for (let i = 0; i < hands.length; i += 1) {
+        const hand = hands[i];
+        const index = hand.landmarks[8];
+        const x = index[0];
+        const y = index[1];
+        let rect = cvs.getBoundingClientRect();
+        user.y = y 
+        fill(0, 255, 0);
+        noStroke();
+        ellipse(x, y, 10, 10);
+    }
+}
 //Select canvas
 const cvs = document.getElementById("pong")
 const ctx = cvs.getContext("2d")
@@ -82,9 +120,10 @@ function drawText(text, x, y, color){
 }
 
 //Moving paddle
-cvs.addEventListener("mousemove", getMousePos);
+/*cvs.addEventListener("mousemove", getMousePos);*/
 
 function getMousePos(e){
+    console.log(e)
     let rect = cvs.getBoundingClientRect();
     
     user.y = e.clientY - rect.top - user.height/2;
