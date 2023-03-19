@@ -1,3 +1,6 @@
+//Winning animation
+const confettis = document.querySelector('img');
+
 //Select canvas
 const cvs = document.getElementById("pong")
 const ctx = cvs.getContext("2d")
@@ -145,6 +148,10 @@ function update(){
         user.score++;
         userScore.play();
         resetBall();
+        confettis.style.display = "block";
+        setTimeout(() => {
+            confettis.style.display = null;
+        }, 3000);
     }
     
     ball.x += ball.velocityX;
